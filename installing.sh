@@ -7,10 +7,10 @@ fi
 hobs(){
 
     if [ $1 -ne 0 ]; then
-        echo $2 installed sucessfully."
+        echo "$2 installation failed."
         exit 1
     else
-        echo "$2 installation failed."
+        echo "$2 installation successful."
     fi
 }
 
