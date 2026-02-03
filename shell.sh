@@ -3,19 +3,32 @@ SG_ID="sg-092464f7c3ff76b0c"
 
 for instance in $@ 
 do
-    IP$=(aws ec2 run-instances \
+    instance_id$ = (aws ec2 run-instances \
         --image-id $AMI_ID \
         --instance-type t3.micro \
         --security-group-ids $SG_ID \
         --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
-        --query 'Instances[*].[InstanceId, PublicIpAddress]' \
+        --query 'Instances[0].InstanceId' \
         --output text
         )
     if [ $instance = "frontend" ]; then 
-        echo "Frontend instance launched with Instance ID and Public IP: $IP"
+        
+        IP=$(aws ec2 describe-instances \
+        --instance-ids $instance_id \
+        --query 'Reservations[].Instances[].PublicIpAddress' \
+        --output text \
+        )
+        echo "Public IP address of $instance : $IP"
 
-    else
-        echo "IP adress of $instance : $IP"
+    else 
+
+         IP=$(aws ec2 describe-instances \
+        --instance-ids $instance_id \
+        --query 'Reservations[].Instances[].privateIpAddress' \
+        --output text \
+        )
+        echo "Private IP adress of $instance : $IP"   
+
     fi
 
 
