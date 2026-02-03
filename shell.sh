@@ -1,7 +1,7 @@
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-092464f7c3ff76b0c"
 
-for instance $@ 
+for instance in $@ 
 do
     IP$=(aws ec2 run-instances \
         --image-id $AMI_ID \
