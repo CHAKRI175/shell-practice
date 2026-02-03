@@ -25,14 +25,17 @@ validate(){
 cp mongodb.repo /etc/yum.repos.d/mongo.repo
 validate $? "mongodb repo file copy"
 
-dnf install mongodb-server -y | tee -a $log_file
+dnf install mongodb-org -y | tee -a $log_file
 validate $? "mongodb-server"
 
-systemctl enable mongod --now
+systemctl enable mongod 
 validate $? "mongodb service enable and start"
 
 systemctl status mongod | tee -a $log_file
 validate $? "mongodb service status check"
+
+systemctl start mongod
+validate $? "mongodb service start"
 
 echo -e "$G MongoDB installation and setup completed successfully. $NC" | tee -a $log_file
 
