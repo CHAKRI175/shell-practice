@@ -6,12 +6,13 @@ G="\e[32m"
 Y="\e[33m"
 B="\e[34m"
 NC="\e[0m"
+Path=$PWD
 if [ $owner -ne 0 ]; then
     echo "$R Please run this script as root. $NC" | tee -a $log_file
     exit 1
 fi
 
-mkdir -p /var/log/shell-practice
+mkdir -p $logs_dir
 validate(){
 
     if [ $1 -ne 0 ]; then
@@ -21,7 +22,7 @@ validate(){
         echo "$2 $G installation successful. $NC" | tee -a $log_file
     fi
 }
-cp /etc/yum.repos.d/mongo.repo
+cp $Path/etc/yum.repos.d/mongo.repo
 validate $? "mongodb repo file copy"
 
 dnf install mongodb-server -y | tee -a $log_file
