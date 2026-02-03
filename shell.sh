@@ -24,7 +24,7 @@ do
 
          IP=$(aws ec2 describe-instances \
         --instance-ids $instance_id \
-        --query 'Reservations[].Instances[].privateIpAddress' \
+        --query 'Reservations[].Instances[].PrivateIpAddress' \
         --output text \
         )
         echo "Private IP adress of $instance : $IP"   
