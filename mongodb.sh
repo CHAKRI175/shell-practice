@@ -39,8 +39,7 @@ validate $? "mongodb service start"
 
 echo -e "$G MongoDB installation and setup completed successfully. $NC" | tee -a $log_file
 
-sed -i 's/127.0.0.0/0.0.0.0/g' /etc/mongod.conf
-validate $? "allow remote connections in mongodb config":
+sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/g' /etc/mongod.conf
 
 systemctl restart mongod    
 validate $? "mongodb service restart after config change"
