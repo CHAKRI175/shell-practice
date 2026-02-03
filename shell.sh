@@ -1,5 +1,7 @@
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-092464f7c3ff76b0c"
+HOSTED_ZONE_ID="Z005220126JCOLLY8L5ZO"
+DOMAIN_NAME="chakri.sbs"
 
 for instance in $@ 
 do
@@ -19,6 +21,7 @@ do
         --output text \
         )
         echo "Public IP address of $instance : $IP"
+        RECORD_NAME="$DOMAIN_NAME"
 
     else 
 
@@ -28,8 +31,30 @@ do
         --output text \
         )
         echo "Private IP adress of $instance : $IP"   
+        RECORD_NAME="$instance.$DOMAIN_NAME"
 
     fi
+        aws route53 change-resource-record-sets \
+    --hosted-zone-id "$HOSTED_ZONE_ID" \
+    --change-batch '{
+        "Comment": "Updating record via script",
+        "Changes": [
+            {
+                "Action": "UPSERT",
+                "ResourceRecordSet": {
+                    "Name": "'"$RECORD_NAME"'",
+                    "Type": "CNAME",
+                    "TTL": 1,
+                    "ResourceRecords": [
+                        {
+                            "Value": "'$IP'"
+                        }
+                    ]
+                }
+            }
+        ]
+    }'
+    echo "DNS record created for $instance"
 
 
 done
